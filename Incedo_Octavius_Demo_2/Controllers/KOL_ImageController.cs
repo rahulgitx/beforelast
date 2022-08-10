@@ -9,6 +9,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using PagedList.Mvc;
+using PagedList;
 
 namespace Incedo_Octavius_Demo_2.Controllers
 {
@@ -73,7 +75,7 @@ namespace Incedo_Octavius_Demo_2.Controllers
         }
 
         // GET: KOL_Image
-        public ActionResult Index()
+        public ActionResult Index(int ? i)
         {
             Console.WriteLine("Inside Index GEt");
             int profile = 2;
@@ -124,7 +126,7 @@ namespace Incedo_Octavius_Demo_2.Controllers
             }
             //profiles = ViewBag.Profiles;
             //ViewBag.Profile = profiles[chosenProfileID].ProfileStatus;
-            return View(kolNameImageList);
+            return View(kolNameImageList.ToPagedList(i ?? 1,12));
         }
 
         [HttpPost]
