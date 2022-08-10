@@ -1,9 +1,10 @@
-﻿@model IEnumerable<Incedo_Octavius_Demo_2.Models.BusinessUserDegreeModel>
+﻿@model IPagedList<Incedo_Octavius_Demo_2.Models.BusinessUserDegreeModel>
 
 @{
     ViewBag.Title = "Index";
 }
-
+@using PagedList.Mvc;
+@using PagedList;
 <h2>Degree Business Rules</h2>
 
 <p>
@@ -12,10 +13,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Degree_Map)
+            @Html.DisplayNameFor(model => model.First().Degree_Map)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Degree_Master)
+            @Html.DisplayNameFor(model => model.First().Degree_Master)
         </th>
         <th></th>
     </tr>
@@ -37,3 +38,4 @@
 }
 
 </table>
+@Html.PagedListPager(Model,i=>Url.Action("Index","BusinessUserDegreeModels",new {i,search=Request.QueryString["search"]}))

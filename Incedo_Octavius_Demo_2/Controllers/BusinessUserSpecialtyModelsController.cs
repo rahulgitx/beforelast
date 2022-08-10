@@ -10,6 +10,8 @@ using System.Web.Mvc;
 using Incedo_Octavius_Demo_2.Data;
 using Incedo_Octavius_Demo_2.Models;
 using MySql.Data.MySqlClient;
+using PagedList.Mvc;
+using PagedList;
 
 namespace Incedo_Octavius_Demo_2.Controllers
 {
@@ -19,7 +21,7 @@ namespace Incedo_Octavius_Demo_2.Controllers
         public string constr = ConfigurationManager.ConnectionStrings["Incedo_Octavius_Demo_2_BU_Spec_Context"].ConnectionString;
 
         // GET: BusinessUserSpecialtyModels
-        public ActionResult Index()
+        public ActionResult Index(int ? i)
         {
             List<BusinessUserSpecialtyModel> Spec_BU_List = new List<BusinessUserSpecialtyModel>();
             //string constr = ConfigurationManager.ConnectionStrings["Incedo_Octavius_Demo_2_kol_table_Context"].ConnectionString;
@@ -61,7 +63,7 @@ namespace Incedo_Octavius_Demo_2.Controllers
                 }
 
             }
-            return View(Spec_BU_List);
+            return View(Spec_BU_List.ToPagedList(i??1,6));
         }
 
         // GET: BusinessUserSpecialtyModels/Details/5
