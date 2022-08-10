@@ -496,6 +496,7 @@
     <Content Include="Views\BusinessUserSpecialtyModels\Index.cshtml" />
     <Content Include="Views\ProfileStatus\Index.cshtml" />
     <Content Include="Views\KOL_Image\ProfileIndex.cshtml" />
+    <Content Include="Views\KOL_Image\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

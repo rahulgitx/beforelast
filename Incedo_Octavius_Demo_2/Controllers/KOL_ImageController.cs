@@ -19,6 +19,7 @@ namespace Incedo_Octavius_Demo_2.Controllers
         private Incedo_Octavius_Demo_2_kol_degree_map_table_Context db = new Incedo_Octavius_Demo_2_kol_degree_map_table_Context();
         ProfileStatusModel model = new ProfileStatusModel();
         List<ProfileStatusModel> profiles = new List<ProfileStatusModel>();
+        List<KOL_Image> kolList = new List<KOL_Image>();
 
         int chosenProfileID;
         List<int> KOL_Count = new List<int>();
@@ -85,6 +86,8 @@ namespace Incedo_Octavius_Demo_2.Controllers
             SetProfileId(profile);
             ViewBag.Profiles = profiles;
             ViewBag.Profile = profiles[chosenProfileID].ProfileStatus;
+            ViewBag.ProfileID = profiles[chosenProfileID].ProfileStatusID;
+            Session["Profile"] = profiles[chosenProfileID].ProfileStatus;
             //chosenProfileID = profile;
             // Stored Procedures
             using (MySqlConnection dbConnection = new MySqlConnection(constr))
@@ -95,7 +98,7 @@ namespace Incedo_Octavius_Demo_2.Controllers
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = dbConnection;
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "KOL_Name_Image";
+                    cmd.CommandText = "KOL_Image";
                     cmd.Parameters.AddWithValue("profileStatus",profile);
                     //cmd.ExecuteReader();
 
@@ -126,21 +129,48 @@ namespace Incedo_Octavius_Demo_2.Controllers
             }
             //profiles = ViewBag.Profiles;
             //ViewBag.Profile = profiles[chosenProfileID].ProfileStatus;
-            return View(kolNameImageList.ToPagedList(i ?? 1,12));
+            kolList = kolNameImageList;
+            return View(kolNameImageList);
         }
+
+        
 
         [HttpPost]
         public ActionResult Index(int profile)
         {
             Console.WriteLine("Inside index post");
-            List<KOL_Image> kolNameImageList = new List<KOL_Image>();
-            string constr = ConfigurationManager.ConnectionStrings["Incedo_Octavius_Demo_2_kol_table_Context"].ConnectionString;
             GetProfiles();
             SetProfileId(profile);
+            GetKOLNameImage(profile);
             ViewBag.Profiles = profiles;
             ViewBag.Profile = profiles[chosenProfileID].ProfileStatus;
+            ViewBag.ProfileID = profiles[chosenProfileID].ProfileStatusID;
+            Session["Profile"] = profiles[chosenProfileID].ProfileStatus;
+            
             //chosenProfileID = profile;
             // Stored Procedures
+
+            //profiles = ViewBag.Profiles;
+            //ViewBag.Profile = profiles[chosenProfileID].ProfileStatus;
+            //return View(kolNameImageList.Where(x => x.First_Name.StartsWith(search) || search == null).ToList());
+            return View(kolList);
+        }
+
+        [HttpPost]
+        public ActionResult Search(string search)
+        {
+            SetProfileId(Convert.ToInt32(Session["profileID"]));
+            GetKOLNameImage(chosenProfileID);
+            List<KOL_Image> matchKOLs = new List<KOL_Image>();
+            matchKOLs = kolList.Where(x => x.First_Name.ToLower().StartsWith(search.ToLower()) || search == null).ToList();
+            return View(matchKOLs);
+        }
+         
+
+        public void GetKOLNameImage(int profile)
+        {
+            List<KOL_Image> kolNameImageList = new List<KOL_Image>();
+            string constr = ConfigurationManager.ConnectionStrings["Incedo_Octavius_Demo_2_kol_table_Context"].ConnectionString;
             using (MySqlConnection dbConnection = new MySqlConnection(constr))
             {
                 try
@@ -149,7 +179,8 @@ namespace Incedo_Octavius_Demo_2.Controllers
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = dbConnection;
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "KOL_Name_Image";
+                    //cmd.CommandText = "KOL_Name_Image";
+                    cmd.CommandText = "KOL_Image";
                     cmd.Parameters.AddWithValue("profileStatus", profile);
                     //cmd.ExecuteReader();
 
@@ -178,11 +209,9 @@ namespace Incedo_Octavius_Demo_2.Controllers
                 }
 
             }
-            //profiles = ViewBag.Profiles;
-            //ViewBag.Profile = profiles[chosenProfileID].ProfileStatus;
-            return View(kolNameImageList);
+            kolList = kolNameImageList;
         }
-         
+
         public void GetProfiles()
         {
             string constr = ConfigurationManager.ConnectionStrings["Incedo_Octavius_Demo_2_kol_table_Context"].ConnectionString;
@@ -225,6 +254,7 @@ namespace Incedo_Octavius_Demo_2.Controllers
             {
                 id = 0;
             }
+            Session["profileID"] = id;
             chosenProfileID = id;
         }
     }
