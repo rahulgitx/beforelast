@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<Incedo_Octavius_Demo_2.Models.KOL_Image>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Search";
 }
+
 
 <!DOCTYPE html>
 <html>
@@ -9,22 +10,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="~/Content/bootstrap.css">
-    <title>Index</title>
+    <title>Search</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     <div class="justify-content-between">
-        @{
-            Html.RenderAction("ProfileIndex");
-        }
+        @{ Html.RenderAction("ProfileIndex"); }
 
         <h2 class="text-danger text-center alert-heading">
-            @ViewBag.Profile KOL
+            @Session["Profile"] KOL
         </h2>
         <br />
     </div>
-    
+
     <div class="row">
         @foreach (var item in Model)
         {
@@ -37,8 +36,7 @@
                         </h5>
                     </div>
                 </div>
-            </div>
-        }
+            </div>}
     </div>
 
     @Scripts.Render("~/bundles/jquery")
